@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主页 - 聊天室</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="home-layout">
+        <div class="home-header">
+            <div class="user-info">
+                <h2 id="userNickname">...</h2>
+                <p id="userPhone"></p>
+            </div>
+            <div style="display:flex;gap:8px">
+                <a id="adminBtn" href="/admin" class="btn btn-outline btn-sm" style="display:none">管理后台</a>
+                <a href="/api/logout" class="btn btn-outline btn-sm">退出</a>
+            </div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="num" id="createdCount">0/5</div>
+                <div class="label">已创建房间</div>
+            </div>
+            <div class="stat-item">
+                <div class="num" id="joinedCount">0/10</div>
+                <div class="label">已加入房间</div>
+            </div>
+        </div>
+
+        <div class="card" style="margin-bottom:24px">
+            <div class="section-title">🔍 通过房间号加入</div>
+            <div class="search-box">
+                <input type="text" id="searchCode" placeholder="输入8位房间号" maxlength="8">
+                <button class="btn btn-primary" onclick="searchRoom()">查找</button>
+            </div>
+        </div>
+
+        <div class="section-title">🏠 我的聊天室</div>
+        <div class="room-list" id="roomList">
+            <p style="color:#aaa;font-size:14px">还没有加入任何聊天室</p>
+        </div>
+
+        <button class="btn btn-primary" onclick="openCreateModal()" style="width:100%;padding:16px">
+            + 创建新聊天室
+        </button>
+
+        <div id="requestsSection" style="display:none;margin-top:28px">
+            <div class="section-title">
+                📬 加入申请
+                <span class="badge" id="requestCount">0</span>
+            </div>
+            <div id="requestList"></div>
+        </div>
+
+        <div style="text-align:center;margin-top:40px;padding:20px;color:#bbb;font-size:12px">
+            制作人：豆包 × 梁定勋（全村的希望、大宇小宇一起玩）
+        </div>
+    </div>
+
+    <!-- 创建房间弹窗 -->
+    <div class="modal-overlay" id="createModal">
+        <div class="modal">
+            <h3>创建新聊天室</h3>
+            <div class="input-group">
+                <label>房间名称</label>
+                <input type="text" id="newRoomName" placeholder="给房间起个名字" maxlength="20">
+            </div>
+            <div class="input-group">
+                <label>房间密码</label>
+                <input type="password" id="newRoomPassword" placeholder="设置加入密码">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" onclick="closeCreateModal()">取消</button>
+                <button class="btn btn-primary" onclick="createRoom()">创建</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 输入密码弹窗 -->
+    <div class="modal-overlay" id="passwordModal">
+        <div class="modal">
+            <h3 id="passwordModalTitle">加入聊天室</h3>
+            <p style="font-size:13px;color:#888;margin-bottom:16px" id="passwordModalRoom"></p>
+            <div class="input-group">
+                <label>房间密码</label>
+                <input type="password" id="joinPassword" placeholder="请输入房主设置的密码">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" onclick="closePasswordModal()">取消</button>
+                <button class="btn btn-primary" onclick="confirmJoin()">确认加入</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 管理员入口已移至 /admin 页面 -->
+
+    <div class="toast" id="toast"></div>
+    <script src="/static/home.js"></script>
+</body>
+</html>
