@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="editor-csrf-token" content="{{ csrf_token }}">
+    <title>代码编辑器 - 聊天室</title>
+    <link rel="stylesheet" href="/static/code_editor.css">
+    <!-- ★回档：diff 库（纯前端，无依赖） -->
+    <script src="https://cdn.jsdelivr.net/npm/diff-match-patch@1.0.5/index.js" defer></script>
+</head>
+<body>
+    <main class="editor-shell">
+        <header class="topbar">
+            <a class="brand" href="/admin" aria-label="返回管理后台"><span class="brand-mark">C</span><span>聊天室<span class="brand-sub"> / 源码工作区</span></span></a>
+            <div class="top-actions">
+                <span class="sync-state"><i id="syncDot"></i><span id="syncLabel">正在连接</span></span>
+                <button class="icon-button" id="refreshButton" title="刷新文件列表" aria-label="刷新文件列表">↻</button>
+                <!-- ★回档：回档按钮 -->
+                <button class="icon-button" id="historyButton" title="版本历史 (Ctrl+Shift+H)" aria-label="版本历史" disabled>🕘</button>
+                <a class="back-link" href="/admin">管理后台 <span>↗</span></a>
+            </div>
+        </header>
+
+        <section class="workspace">
+            <aside class="file-sidebar">
+                <div class="sidebar-heading"><span>项目文件</span><button class="icon-button small" id="newFileButton" title="新建文件" aria-label="新建文件">＋</button></div>
+                <div id="fileTree" class="file-tree"><div class="tree-loading">正在读取文件...</div></div>
+                <div class="sidebar-foot"><span class="live-indicator"></span>运行目录实时同步</div>
+            </aside>
+
+            <section class="editor-panel">
+                <div class="editor-toolbar">
+                    <div class="file-context"><span class="file-glyph" id="fileGlyph">{ }</span><span id="currentPath">未选择文件</span><span id="dirtyIndicator" class="dirty-indicator"></span></div>
+                    <div class="file-actions">
+                        <span id="fileStatus" class="file-status">选择文件开始编辑</span>
+                        <!-- ★回档：回档提示 -->
+                        <span id="historyHint" class="history-hint" hidden>已回档 · 按 Ctrl+S 保存即生成新版本</span>
+                        <button class="toolbar-button danger" id="deleteButton" disabled title="删除当前文件">删除</button>
+                        <button class="toolbar-button save-button" id="saveButton" disabled title="保存文件 (Ctrl+S)"><span>保存更改</span><kbd>Ctrl S</kbd></button>
+                    </div>
+                </div>
+                <div id="editorNotice" class="notice" role="status" hidden></div>
+                <div class="editor-wrap" id="editorWrap">
+                    <div class="welcome" id="welcomeState">
+                        <div class="welcome-mark">{ }</div>
+                        <h1>代码工作区</h1>
+                        <p>从左侧选择一个项目文件开始编辑</p>
+                        <div class="welcome-meta"><span>UTF-8</span><span>自动检测外部修改</span><span>保存即同步到服务器</span><span>Python 改动需重启后端</span></div>
+                    </div>
+                    <div class="code-editor" id="codeEditor" hidden>
+                        <pre class="line-numbers" id="lineNumbers" aria-hidden="true">1</pre>
+                        <textarea id="codeInput" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-label="代码编辑区域"></textarea>
+                    </div>
+                </div>
+                <footer class="statusbar"><span id="languageLabel">纯文本</span><span id="cursorLabel">行 1，列 1</span><span id="sizeLabel">--</span></footer>
+            </section>
+        </section>
+
+        <!-- ★回档：版本历史侧栏 -->
+        <aside id="historyPanel" class="history-panel hidden" aria-hidden="true">
+            <header>
+                <span>版本历史</span>
+                <button class="icon-button small" id="historyClose" aria-label="关闭">✕</button>
+            </header>
+            <ul id="historyList"><li class="muted">打开文件后可见历史版本</li></ul>
+        </aside>
+
+        <!-- ★回档：diff 预览弹层 -->
+        <dialog id="diffModal" class="diff-modal">
+            <header>
+                <span id="diffTitle">版本对比</span>
+                <button class="icon-button small" id="diffClose" aria-label="关闭">✕</button>
+            </header>
+            <div id="diffBox" class="diff-box"></div>
+            <footer>
+                <button class="toolbar-button save-button" id="diffRestore">恢复此版本</button>
+                <span class="muted">仅灌入编辑器，需再按 Ctrl+S 才生效</span>
+            </footer>
+        </dialog>
+
+        <div class="toast" id="toast" role="status"></div>
+    </main>
+    <script src="/static/code_editor.js"></script>
+</body>
+</html>

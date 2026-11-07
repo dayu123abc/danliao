@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ room_name }} - 聊天室</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="chat-layout">
+        <div class="chat-header">
+            <div class="room-info">
+                <h2>{{ room_name }}</h2>
+                <p>房间号: {{ room_code }}</p>
+            </div>
+            <div style="display:flex;gap:8px">
+                <button class="btn btn-outline btn-sm" onclick="toggleMembers()">成员</button>
+                <a href="/" class="btn btn-outline btn-sm">← 主页</a>
+            </div>
+        </div>
+        <div class="chat-body" style="display:flex;gap:16px;flex:1;overflow:hidden">
+            <div class="chat-messages" id="chatMessages" style="flex:1"></div>
+            <div class="member-panel" id="memberPanel" style="display:none;width:220px;background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,0.06);padding:16px;overflow-y:auto">
+                <div class="section-title" style="font-size:15px;margin-bottom:12px">群成员</div>
+                <div id="memberList"></div>
+            </div>
+        </div>
+        <div class="chat-input-bar">
+            <input type="text" id="msgInput" placeholder="输入消息..." maxlength="500" autocomplete="off">
+            <label class="btn btn-outline btn-sm" style="cursor:pointer;padding:10px 14px">
+                📷
+                <input type="file" id="imgInput" accept="image/*" style="display:none">
+            </label>
+            <button class="btn btn-primary" onclick="sendMessage()">发送</button>
+        </div>
+    </div>
+    <div class="toast" id="toast"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"></script>
+    <script>
+        window.ROOM_CODE = "{{ room_code }}";
+        window.ROOM_NAME = "{{ room_name }}";
+    </script>
+    <script src="/static/chat.js"></script>
+</body>
+</html>
